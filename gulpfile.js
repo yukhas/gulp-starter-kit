@@ -18,6 +18,9 @@ const stylelint = require('gulp-stylelint');
 const rename = require('gulp-rename');
 const server = require('browser-sync').create();
 const sequence = require('run-sequence');
+const babel = require('gulp-babel');
+const concat = require('gulp-concat');
+const uglify = require('gulp-uglify');
 
 // Создаем таск для сборки html файлов
 gulp.task('html', () =>
@@ -66,6 +69,21 @@ gulp.task('css', () =>
     // Выкидываем минифицированный css в папку build
     .pipe(gulp.dest('./build/css'))
     // Говорим browser-sync о том что пора перезагрузить барузер так как файл изменился
+    .pipe(server.stream()),
+);
+
+// Создаем таск для обработки js файлов
+gulp.task('js', () =>
+  
+  gulp
+    .src('./src/js/*.js')
+    .pipe(babel({
+      presets: ['@babel/env']
+    }))
+    .pipe(concat('all.js'))
+    .pipe(uglify())
+    .pipe(gulp.dest('./build'))
+    // говорим browser-sync о том что пора перезагрузить барузер, так как файл изменился
     .pipe(server.stream()),
 );
 
