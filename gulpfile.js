@@ -74,17 +74,14 @@ gulp.task('css', () =>
 
 // Создаем таск для обработки js файлов
 gulp.task('js', () =>
-  
   gulp
     .src('./src/js/*.js')
     .pipe(babel({
       presets: ['@babel/env']
     }))
-    .pipe(concat('all.js'))
+    .pipe(concat('js/scripts.js'))
     .pipe(uglify())
     .pipe(gulp.dest('./build'))
-    // говорим browser-sync о том что пора перезагрузить барузер, так как файл изменился
-    .pipe(server.stream()),
 );
 
 // Создаем svg спрайт
@@ -130,6 +127,7 @@ gulp.task('watch', () => {
   gulp.watch('./src/*.html', ['html']);
   // Следим за изменениями в любом sass файле и вызываем таск 'css' на каждом изменении
   gulp.watch('./src/sass/**/*.scss', ['css']);
+  gulp.watch("./src/js/*.js", ["js"]);
 });
 
 // Таск создания и запуска веб-сервера
@@ -161,7 +159,7 @@ gulp.task('prepare', () => del(['**/.gitkeep', 'README.md', 'banner.png']));
 // Таск который 1 раз собирает все статические файлы
 // Запускается из корня проекта командой npm run build
 gulp.task('build', cb => {
-  sequence('del:build', 'svg-sprite', 'images', 'fonts', 'css', 'html', cb);
+  sequence('del:build', 'svg-sprite', 'images', 'fonts', 'css', 'html', 'js', cb);
 });
 
 // Главный таск для разработки, сначала удаляет папку build,

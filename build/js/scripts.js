@@ -1,0 +1,1 @@
+"use strict";var printMessage=function(e){console.log(e)};printMessage("Hello");
